@@ -1,44 +1,64 @@
 package junit.tutorial.ex02.e03;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class RangeTest {
-	
-	@Test 
-	void test1() {
-		// test1 min=0.0、max=10.5のRangeのとき
-		Range range = new Range(0.0, 10.5);
+
+	// test1 min=0.0、max=10.5のRangeのとき	
+	@Nested
+	class rangeTest1 {
 		
-		double tc1 = -0.1;
-		double tc2 = 0.0;
-		double tc3 = 10.5;
-		double tc4 = 10.6;
+		@ParameterizedTest
+		@MethodSource("testParameter")
+		void testRange1(double value, boolean expeced, String test) {
+			double min = 0.0;
+			double max = 10.5;
+			Range range = new Range(min, max);
+
+			assertEquals(expeced, range.contains(value), test);
+		}
 		
-		assertAll(
-				() -> assertEquals(false, range.contains(tc1),"tc1"),
-				() -> assertEquals(true, range.contains(tc2),"tc2"),
-				() -> assertEquals(true, range.contains(tc3),"tc3"),
-				() -> assertEquals(false, range.contains(tc4),"tc4")
-			);
+		static Stream<Arguments> testParameter(){
+			return Stream.of(
+					Arguments.of(-0.1, false, "errorTest1"),
+					Arguments.of(0.0, true, "errorTest2"),
+					Arguments.of(10.5, true, "errorTest3"),
+					Arguments.of(10.6, false, "errorTest4")
+			);	
+		}
+
 	}
-		@Test
-		void test2() {
-		// test2 min=-5.1、max=5.1のRangeのとき
-		Range range = new Range(-5.1, 5.1);
+	
+	// test1 min=-5.1、max=5.1のRangeのとき	
+	@Nested
+	class rangeTest2 {
 		
-		double tc1 = -5.2;
-		double tc2 = -5.1;
-		double tc3 = 5.1;
-		double tc4 = 5.2;
+		@ParameterizedTest
+		@MethodSource("testParameter")
+		void testRange1(double value, boolean expeced, String test) {
+			double min = -5.1;
+			double max = 5.1;
+			Range range = new Range(min, max);
+
+			assertEquals(expeced, range.contains(value), test);
+		}
 		
-		assertAll(
-				() -> assertEquals(false, range.contains(tc1),"tc1"),
-				() -> assertEquals(true, range.contains(tc2),"tc2"),
-				() -> assertEquals(true, range.contains(tc3),"tc3"),
-				() -> assertEquals(false, range.contains(tc4),"tc4")
-		);
+		static Stream<Arguments> testParameter(){
+			return Stream.of(
+					Arguments.of(-5.2, false, "errorTest1"),
+					Arguments.of(-5.1, true, "errorTest2"),
+					Arguments.of(5.1, true, "errorTest3"),
+					Arguments.of(5.2, false, "errorTest4")
+			);	
+		}
+
 	}
 
 }
